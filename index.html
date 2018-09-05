@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <title>Crystal Game</title>
+
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="reset.css">
+
+  <link rel="stylesheet" type="text/css" href="style.css">
+
+  <style type="text/css">
+    .crystal-image0 {
+      width: 300px;
+      height: 300px;
+    }
+
+    .crystal-image1 {
+      width: 300px;
+      height: 300px;
+    }
+
+    .crystal-image2 {
+      width: 300px;
+      height: 300px;
+    }
+
+    .crystal-image3 {
+      width: 300px;
+      height: 300px;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <h1>Crystal Game!</h1>
+
+  <div>
+
+    <p>
+      You will be given a random number at the start of the game.
+    </p>
+
+    <p>
+      There are four crystals below, and by clicking on the a crystal you will add a specific amount of points to your
+      total score.
+    </p>
+
+    <p>
+      You win the game by matching your total score to the random number, you lose the game if your total score, goes
+      above the random number.
+    </p>
+
+    <p>
+      The value of each crystal is a mystery until you click on the crystal.
+    </p>
+
+    <p>
+      The value of each crystal will randomize at the end of each game.
+    </p>
+
+    <p id="randomNumber"></p>
+    <p id="wins"></p>
+    <p id="losses"></p>
+    <div id="crystals"></div>
+    <p id="counter"></p>
+
+    <script type="text/javascript">
+      $(document).ready(function () {
+
+        var targetNumber = Math.floor(Math.random() * 121) + 19;
+        var wins = 0;
+        var losses = 0;
+        var totalScore = 0;
+        var counter = 0;
+        var numberOptions = [];
+
+        $("#randomNumber").text(targetNumber);
+
+        function clear() {
+          targetNumber = Math.floor(Math.random() * 121) + 19;
+          counter = 0;
+          numberOptions = [];
+          number();
+          renderVaribles();
+          imageGenerator();
+          $("#randomNumber").text(targetNumber);
+        }
+        number();
+        imageGenerator();
+
+        function number() {
+          while (numberOptions.length < 4) {
+            var randomnumber = Math.floor(Math.random() * 11) + 1;
+            if (numberOptions.indexOf(randomnumber) > -1) continue;
+            numberOptions[numberOptions.length] = randomnumber;
+          }
+        }
+
+        for (var i = 0; i < numberOptions.length; i++) {
+          var imageCrystal = $("<img>");
+
+          var name = "crystal-image" + i;
+
+          imageCrystal.addClass(name);
+
+          imageCrystal.addClass("test");
+
+          imageCrystal.attr("src",
+            "http://cdn.playbuzz.com/cdn/35910209-2844-45c0-b099-f4d82878d54f/00261fda-4062-4096-81fd-8cf96b9034e8.jpg"
+          );
+
+          imageCrystal.attr("data-crystalvalue", numberOptions[i]);
+
+          $("#crystals").append(imageCrystal);
+
+        }
+
+        function imageGenerator() {
+
+          for (var i = 0; i < numberOptions.length; i++) {
+
+            var name = ".crystal-image" + i;
+
+            $(name).removeAttr("data-crystalvalue");
+
+            $(name).attr("data-crystalvalue", numberOptions[i]);
+
+          }
+
+        }
+
+
+        $(".test").on("click", function () {
+
+          var crystalValue = ($(this).attr("data-crystalvalue"));
+          crystalValue = parseInt(crystalValue);
+          counter += crystalValue;
+
+          renderScore();
+
+          if (counter == targetNumber) {
+            alert("You win!");
+            wins++;
+            clear();
+
+          } else if (counter >= targetNumber) {
+            alert("You lose!")
+            losses++;
+            clear();
+          }
+
+          renderVaribles();
+
+        });
+
+        renderVaribles();
+
+        function renderVaribles() {
+
+          document.querySelector("#counter").innerHTML = "Current Score:" + counter;
+          document.querySelector("#wins").innerHTML = "Wins: " + wins;
+          document.querySelector("#losses").innerHTML = "Losses: " + losses;
+
+        }
+
+        function renderScore() {
+
+          document.querySelector("#counter").innerHTML = "Current Score:" + counter;
+
+        }
+
+      });
+    </script>
+</body>
+
+</html>
